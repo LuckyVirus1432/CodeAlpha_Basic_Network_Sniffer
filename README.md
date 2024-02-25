@@ -3,19 +3,20 @@ Python networking tool (Network Packet Sniffer)
 
 |*| Code Alpha Internship Task 1
 
-[ Note ] => There are two files and requires the sudo/root or Administrative permission to sniff packets over the internet.
-          (1) 
+[ Note ] => There are two files and both requires the sudo/root or Administrative permission to sniff packets over the internet.
 [*] Network Packet Sniffing Tool in Python :-
   [1] First We are Unpacking the Ethernet Frame:
     - As we know the data flows in the form of packets through an interface/medium.
     - This packet is known as Ethernet Frame which we are about to sniff from network.
     - Ethernet Frame contains MAC address of the Devices
 
-  * Ethernet Frame structure:
+
+	* Ethernet Frame structure:
         sync    receiver    sender      type    payload(ip/arp frame + padding)     crc
        8byte    6byte       6byte       2byte           46-1500byte                 4byte
     
-    - In the above frame sync & crc are not important for humans but receiver sender type & payload has some juicy information which will be used by human.
+
+- In the above frame sync & crc are not important for humans but receiver sender type & payload has some juicy information which will be used by human.
       receiver => the device MAC which is going to receive the packet sent by the sender
       sender => the device MAC which is sending data to the receiver.
       type => Type of the protocol used in the frame (IPv4, IPv6 or ARP)

@@ -1,7 +1,6 @@
 # CodeAlpha_Basic_Network_Sniffer
 Python networking tool (Network Packet Sniffer)
 
-'''
 |*| Code Alpha Internship Task 1
 
 [ Note ] => This file is only for Linux OS and requires the sudo/root permission to sniff packets over the internet
@@ -50,4 +49,4 @@ Python networking tool (Network Packet Sniffer)
                          \xba\xe4\xd6\x87\x90\xda\x36\x67\x00\x9a\x4e\xd2\xc2\xad\x56\x13\x37\x0e\xbe
                          \x13\x01\x00\x00\x2e\x00\x33\x00\x24\x00\x1d\x00\x20\x9d\x87\x7a\xb9\xfd\xa7
 
-'''
+

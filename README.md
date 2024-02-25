@@ -3,8 +3,8 @@ Python networking tool (Network Packet Sniffer)
 
 |*| Code Alpha Internship Task 1
 
-[ Note ] => This file is only for Linux OS and requires the sudo/root permission to sniff packets over the internet
-
+[ Note ] => There are two files and requires the sudo/root or Administrative permission to sniff packets over the internet.
+          (1) 
 [*] Network Packet Sniffing Tool in Python :-
   [1] First We are Unpacking the Ethernet Frame:
     - As we know the data flows in the form of packets through an interface/medium.

@@ -23,7 +23,7 @@
 import socket
 import struct   # Allows us to package binary data in a structured way
 import textwrap
-
+import sys
 TAB1 = '\t -'
 TAB2 = '\t\t '
 TAB3 = '\t\t\t '
@@ -52,8 +52,6 @@ def eth_Frame(data):
     #     H  => Short unsigned integer data
     #   data[:14] => to read only first 14 bytes of the frame
     return get_mac(dest_mac), get_mac(src_mac), socket.htons(proto), data[14:]
-
-
 
 
 
@@ -109,58 +107,60 @@ def format_multi_line(prefix, string, size=80):
     return '\n'.join([prefix + line for line in textwrap.wrap(string, size)])
 
 
-
 # Main function
 def main():
     conn = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.ntohs(3))
 
     while(True):
-        raw_data, addr = conn.recvfrom(65535)
-        dest_mac, src_mac, eth_proto, data = eth_Frame(raw_data)
-        print('\nEthernet frame: ')
-        print(TAB1 + "Source: {}, Destination: {}, Protocol: {}".format(src_mac, dest_mac, eth_proto))
+        try:
+            raw_data, addr = conn.recvfrom(65535)
+            dest_mac, src_mac, eth_proto, data = eth_Frame(raw_data)
+            print('\nEthernet frame: ')
+            print(TAB1 + "Source: {}, Destination: {}, Protocol: {}".format(src_mac, dest_mac, eth_proto))
 
-        # 8 for IPv4
-        if eth_proto == 8:
-            (version, header_len, ttl, proto, src, target, data) = ipv4_Packet(data)
-            print(TAB1 + 'IPv4 Packet: ')
-            print(TAB2 + 'Version: {}, Header: {}, TTL: {}'.format(version, header_len, ttl))
-            print(TAB2 + 'Protocol: {}, Source: {}, Target: {}'.format(proto, src, target))
-            
-            # checking IPv4 packet protocol
-            # 1 ICMP, 2 IGMP, 6 TCP, 17 UDP
-            # ICMP
-            if proto == 1:
-                icmp_type, code, checksum, data = icmp_packet(data)
-                print(TAB1 + 'ICMP Packet: ')
-                print(TAB2 + 'Type: {}, Code: {}, Checksum: {}'.format(icmp_type, code, checksum))
-                print(TAB2 + 'Data: ')
-                print(format_multi_line(DATA_TAB3, data))
-            # TCP
-            elif proto == 6:
-                src_port, dest_port, seq, ack, flag_urg, flag_ack, flag_psh, flag_rst, flag_syn, flag_fin, data = tcp_packet(data)
-                print(TAB1 + 'TCP Packet: ')
-                print(TAB2 + 'Source Port: {}, Destination Port: {}'.format(src_port, dest_port))
-                print(TAB2 + 'Sequence: {}, Acknowledgment: {}'.format(seq, ack))
-                print(TAB2 + 'Flags: ')
-                print(TAB3 + 'URG: {}, ACK: {}, PSH: {}, RST: {}, SYN: {}, FIN: {}'.format(flag_urg, flag_ack, flag_psh, flag_rst, flag_syn, flag_fin))
-                print(TAB2 + 'Data: ')
-                print(format_multi_line(DATA_TAB3, data))
-            # UDP
-            elif proto == 17:
-                src_port, dest_port, length = udp_packet(data)
-                print(TAB1 + 'UDP Packet: ')
-                print(TAB2 + 'Source Port: {}, Destination Port: {}, Length: {}'.format(src_port, dest_port, length))
-                print(TAB2 + 'Data: ')
-                print(format_multi_line(DATA_TAB3, data))
-            # Other
+            # 8 for IPv4
+            if eth_proto == 8:
+                (version, header_len, ttl, proto, src, target, data) = ipv4_Packet(data)
+                print(TAB1 + 'IPv4 Packet: ')
+                print(TAB2 + 'Version: {}, Header: {}, TTL: {}'.format(version, header_len, ttl))
+                print(TAB2 + 'Protocol: {}, Source: {}, Target: {}'.format(proto, src, target))
+                
+                # checking IPv4 packet protocol
+                # 1 ICMP, 2 IGMP, 6 TCP, 17 UDP
+                # ICMP
+                if proto == 1:
+                    icmp_type, code, checksum, data = icmp_packet(data)
+                    print(TAB1 + 'ICMP Packet: ')
+                    print(TAB2 + 'Type: {}, Code: {}, Checksum: {}'.format(icmp_type, code, checksum))
+                    print(TAB2 + 'Data: ')
+                    print(format_multi_line(DATA_TAB3, data))
+                # TCP
+                elif proto == 6:
+                    src_port, dest_port, seq, ack, flag_urg, flag_ack, flag_psh, flag_rst, flag_syn, flag_fin, data = tcp_packet(data)
+                    print(TAB1 + 'TCP Packet: ')
+                    print(TAB2 + 'Source Port: {}, Destination Port: {}'.format(src_port, dest_port))
+                    print(TAB2 + 'Sequence: {}, Acknowledgment: {}'.format(seq, ack))
+                    print(TAB2 + 'Flags: ')
+                    print(TAB3 + 'URG: {}, ACK: {}, PSH: {}, RST: {}, SYN: {}, FIN: {}'.format(flag_urg, flag_ack, flag_psh, flag_rst, flag_syn, flag_fin))
+                    print(TAB2 + 'Data: ')
+                    print(format_multi_line(DATA_TAB3, data))
+                # UDP
+                elif proto == 17:
+                    src_port, dest_port, length = udp_packet(data)
+                    print(TAB1 + 'UDP Packet: ')
+                    print(TAB2 + 'Source Port: {}, Destination Port: {}, Length: {}'.format(src_port, dest_port, length))
+                    print(TAB2 + 'Data: ')
+                    print(format_multi_line(DATA_TAB3, data))
+                # Other
+                else:
+                    print(TAB1 + 'Data: ')
+                    print(format_multi_line(DATA_TAB2, data))
             else:
-                print(TAB1 + 'Data: ')
-                print(format_multi_line(DATA_TAB2, data))
-        else:
-            print('Data: ')
-            print(format_multi_line(DATA_TAB1, data))
-
+                print('Data: ')
+                print(format_multi_line(DATA_TAB1, data))
+        except KeyboardInterrupt as e:
+            print(e)
+            sys.exit()
 
 if __name__ == '__main__':
     main()

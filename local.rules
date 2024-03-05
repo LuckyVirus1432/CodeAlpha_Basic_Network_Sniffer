@@ -1,0 +1,14 @@
+# $Id: local.rules,v 1.11 2004/07/23 20:15:44 bmc Exp $
+# ----------------
+# LOCAL RULES
+# ----------------
+# This file intentionally does not come with signatures.  Put your local
+# additions here.
+
+##Format of the Rule:
+#action portocol src_ip src_port -> dst_ip dst_port (msg: ""; [options:values];)
+
+alert icmp any any -> HOME_NET any (msg: "Someone is pinging, ICMP packet found..!"; sid:100001; rev:1;)
+alert tcp any any -> HOME_NET 22 (msg: "SSH Login Attempt..!"; sid:100002; rev:1;)
+alert tcp any any -> HOME_NET 21 (msg: "FTP Authentication Attempt..!"; sid:100003; rev:1;)
+#alert tcp any any -> HOME_NET 80 (flags: S; msg: "Possible TCP DOS attack, Be Carefull..!"; flow: stateless; threshold: type$: type both, track by_dst, count 70, seconds 10; sid:100004; rev:1;)

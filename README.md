@@ -1,7 +1,7 @@
 # CodeAlpha_Basic_Network_Sniffer
 Python networking tool (Network Packet Sniffer)
 
-|*| Code Alpha Internship Task 1
+# Code Alpha Internship Task 1
 
 [ Note ] => There are two files and both requires the sudo/root or Administrative permission to sniff packets over the internet.
 [*] Network Packet Sniffing Tool in Python :-
@@ -50,3 +50,39 @@ Python networking tool (Network Packet Sniffer)
                          \x13\x01\x00\x00\x2e\x00\x33\x00\x24\x00\x1d\x00\x20\x9d\x87\x7a\xb9\xfd\xa7
 
 
+
+
+
+
+# Codealpha Internship Task2:
+
+Snort NIDS: (Version 3)
+1. If you are using VMs then please make sure that both VMS are in a same network, So that they can communicate with each other.
+2. Install snort:
+	
+ 		apt install snort -y (on kali linux = snort v3)
+3. Configure the snort main configuration file:
+  
+ 		cat /etc/snort/snort.lua (change HOME_NET or EXTERNAL_NET according to you or leave it as it is.
+4. Write the local rules or use default rules:
+
+		cat  /etc/snort/rules/local.rules
+5. Start snort tool and perform the attack:
+	(check the alerts)
+	
+
+For testing purpose try to protect Metasploitable linux server (vulnerable by default) and use metasploit-framework to exploit the Metasploitable machine from linux.
+Host (EXTERNAL_NET): Kali Linux or any OS trying to breach Metasploitable
+Target (HOME_NET)  : Metasploitable 
+
+* Here are some possible network attacks we are going to detect:
+  
+		alert icmp any any -> HOME_NET any (msg: "ICMP packet found...Seems to be pinged by someone"; sid:100001; rev:1;)
+		alert tcp any any -> HOME_NET 21 (msg: "SSH Login Attempt .. !"; sid:100002; rev1;)
+		alert tcp any any -> HOME_NET 22 (msg: "FTP Authentication Attempt..!"; sid:100003; rev:3;)
+	(Refer this official documentation for writing rules: https://docs.snort.org/ )
+
+General format of the rule is as followed:
+	action protocol source_ip source_port direction_symbol dest_ip dest_port (msg: ""; [other options];)
+
+I've used hping3 tool to send arbitary TCP/IP packets to the Network
